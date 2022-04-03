@@ -1,6 +1,6 @@
 # Nest.js Fundamentals 
 
-(Official Nest.js Fundamentals Course)[https://learn.nestjs.com/]
+[Official Nest.js Fundamentals Course](https://learn.nestjs.com/)
 
 A framework to work with node.js that let us focusing on feature development and it takes care of config and architecture.
 
