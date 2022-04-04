@@ -19,3 +19,13 @@ A framework to work with node.js that let us focusing on feature development and
         Use PartialType to define update-coffee without repeting code
         PartialType extends from create-coffee but all its properties as optionals
         And also it inherits all its validation rules.
+
+
+## SQL - Postgres
+
+`docker run --network 2f259bab93aa --name coffee-db -e POSTGRES_PASSWORD=pass123 -d -p 5432 postgres`
+
+### NPM Install
+* pg
+* @nestjs/typeorm
+* TypeORM

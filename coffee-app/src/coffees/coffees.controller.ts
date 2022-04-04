@@ -25,7 +25,7 @@ export class CoffeesController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string): Coffee {
+    findOne(@Param('id') id: string): Promise<Coffee> {
         const coffee = this.coffeesService.findOne(id);
         if(!coffee) {
             throw new NotFoundException(`Coffe ${id} does not exit`);
