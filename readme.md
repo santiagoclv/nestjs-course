@@ -23,9 +23,11 @@ A framework to work with node.js that let us focusing on feature development and
 
 ## SQL - Postgres
 
-`docker run --network 2f259bab93aa --name coffee-db -e POSTGRES_PASSWORD=pass123 -d -p 5432 postgres`
+`podman run -e POSTGRES_PASSWORD=pass123 -d -p 5432:5432 postgres`
 
 ### NPM Install
 * pg
 * @nestjs/typeorm
 * TypeORM
+
+`podman run -d -p 27017:27017 mongo`

@@ -10,12 +10,12 @@ import { CoffeesModule } from './coffees/coffees.module';
     TypeOrmModule.forRoot({
       type: 'postgres', // type of our database
       host: 'localhost', // database host
-      port: 44197, // database host
+      port: 5432, // database host
       username: 'postgres', // username
       password: 'pass123', // user password
       database: 'postgres', // name of our database,
       autoLoadEntities: true, // models will be loaded automatically 
-      synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
+      synchronize: true, // your entities will be synced with the database(recommended: DISABLE THIS IN PROD)
     }),
   ],
   controllers: [AppController],
