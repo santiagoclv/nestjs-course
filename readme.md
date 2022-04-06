@@ -29,5 +29,3 @@ A framework to work with node.js that let us focusing on feature development and
 * pg
 * @nestjs/typeorm
 * TypeORM
-
-`podman run -d -p 27017:27017 mongo`
