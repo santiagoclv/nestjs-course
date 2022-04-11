@@ -244,3 +244,110 @@ export class CoffeesService {
 }
 
 ```
+
+## Nest Env Configuration Service
+
+`npm i @nestjs/config`
+`npm install @hapi/joi`
+`npm install --save-dev @types/hapi__joi`
+
+```ts
+
+/**
+ * Configuration file necesary to load on ConfigModule.
+ * /src/config/app.config.ts File 
+ *
+ */
+export default () => ({
+  environment: process.env.NODE_ENV || 'development',
+  database: {
+    host: process.env.DATABASE_HOST,
+    port: parseInt(process.env.DATABASE_PORT, 10) || 5432
+  }
+});
+
+
+/**
+ * Schema validation ( Joi neccessary dependencies for this example )
+ * /src/config/validation.config.ts File 
+ * 
+ */
+import * as Joi from 'joi';
+
+export default const validationSchema = Joi.object({
+  environment: Joi.required(),
+  database: Joi.object({
+    host: Joi.required(),
+    port: Joi.number().default(5432),
+  })
+});
+
+/**
+ * To specify another path (or file) to get the env variables
+ */
+import { ConfigModule } from '@nestjs/config';
+import appConfig from './config/app.config';
+import validationConfig from './config/validation.config';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.environment’,
+      load: [appConfig], // 👈
+      validationSchema: validationConfig
+    }),
+  ],
+})
+export class AppModule {}
+
+/** 
+ * Have ConfigModule *ignore* .env files 
+ * Useful when using Provider UI's such as Heroku, etc (and they handle all ENV variables)
+ */
+ConfigModule.forRoot({
+  ignoreEnvFile: true,
+});
+
+/* Utilize ConfigService */
+import { ConfigService } from '@nestjs/config';
+
+constructor(
+  private readonly configService: ConfigService, // 👈
+) {}
+
+/* Accessing process.env variables from ConfigService */
+const databaseHost = this.configService.get<string>('database.host');
+console.log(databaseHost);
+
+/**
+ * ASYNC Load env variables because changes in the order of the load of modules (ConfigModule.)
+ * Example using async provider example from useFactory
+ */
+
+TypeOrmModule.forRootAsync({ // 👈
+  useFactory: () => ({
+    type: 'postgres',
+    host: process.env.DATABASE_HOST,
+    port: +process.env.DATABASE_PORT,
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    autoLoadEntities: true,
+    synchronize: true,
+  }),
+}),
+```
+
+## Additional building blocks.
+
+* **Exception filters** (Process and handle unespected exceptions on responses)
+* **Pipes** (Transformations and Validations)
+* **Guards** (Authorizations, Authentication)
+* **Interceptors** (Middlewares?)
+
+This blocks can be bind to these scopes:
+
+* **Globally**-scoped, 
+* **Controller**-scoped, 
+* **Method**-scoped, 
+* **Param**-scoped (It's available to Pipes only.)
