@@ -22,9 +22,6 @@ A framework to work with node.js that let us focusing on feature development and
 
 
 ## SQL - Postgres
-
-`podman run -e POSTGRES_PASSWORD=pass123 -d -p 5432:5432 postgres`
-
 ### NPM Install
 * pg
 * @nestjs/typeorm
