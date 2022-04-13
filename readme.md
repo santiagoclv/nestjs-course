@@ -412,3 +412,32 @@ export const Protocol = createParamDecorator(
 );
 
 ```
+
+## OpenAPI documentation with Swagger
+
+`npm install --save @nestjs/swagger swagger-ui-express`
+
+
+
+````json
+  // added on nest-cli.json, helps auto detect properties on endpoints
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "plugins": ["@nestjs/swagger/plugin"]
+  }
+```
+
+```ts
+// First create the option object
+const options = new DocumentBuilder()
+  .setTitle('Iluvcoffee')
+  .setDescription('Coffee application')
+  .setVersion('1.0')
+  .build();
+
+// the document to serve
+const document = SwaggerModule.createDocument(app, options);
+
+// startup over `/api`
+SwaggerModule.setup('api', app, document);
+```
