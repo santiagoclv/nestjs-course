@@ -9,7 +9,9 @@ import {
     Post,
     Query,
 } from '@nestjs/common';
+import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { ParseIntPipe } from 'src/common/pipes/parse-int.pipe';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
@@ -19,13 +21,15 @@ import { Coffee } from './entities/coffee.entity';
 export class CoffeesController {
     constructor(private readonly coffeesService: CoffeesService) { }
 
+    @Public()
     @Get()
     findAll(@Query() paginationQuery: PaginationQueryDto) {
         return this.coffeesService.findAll(paginationQuery);
     }
 
+    // This is not the right way to transform a string through pipes, it is just to ilustrate a case.
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<Coffee> {
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<Coffee> {
         const coffee = await this.coffeesService.findOne(id);
         if(!coffee) {
             throw new NotFoundException(`Coffe ${id} does not exit`);
@@ -38,13 +42,15 @@ export class CoffeesController {
         return this.coffeesService.create(createCoffeDto);
     }
 
+    // This is not the right way to transform a string through pipes, it is just to ilustrate a case.
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateCoffeDto: UpdateCoffeeDto) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateCoffeDto: UpdateCoffeeDto) {
         return this.coffeesService.update(id, updateCoffeDto);
     }
 
+    // This is not the right way to transform a string through pipes, it is just to ilustrate a case.
     @Patch('recommendations/:id')
-    async recommendation(@Param('id') id: string) {
+    async recommendation(@Param('id', ParseIntPipe) id: number) {
         const coffee = await this.coffeesService.findOne(id);
         if(!coffee) {
             throw new NotFoundException(`Coffe ${id} does not exit`);
@@ -53,7 +59,7 @@ export class CoffeesController {
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    remove(@Param('id') id: number) {
         return this.coffeesService.remove(id);
     }
 

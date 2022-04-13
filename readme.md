@@ -348,3 +348,67 @@ This blocks can be bind to these scopes:
 * **Controller**-scoped, 
 * **Method**-scoped, 
 * **Param**-scoped (It's available to Pipes only.)
+
+### Exception filters
+`nest g filter common/filters/filter-name-exception`
+
+### Guards
+`nest g guard common/guards/guards-name`
+
+Attention!: When the Guard needs to be injected with some demendencies you can not use globalContext.
+
+See the custom @ Public decorator and CommonModule for more information.
+
+### Interceptors
+
+`nest g interceptor common/interceptors/wrap-response`
+
+* bind extra logic before or after method execution
+* transform the result returned from a method
+* transform the exception thrown from a method
+* extend basic method behavior
+* even completely overriding a method - depending on a specific condition (for example: doing something like caching various responses)
+
+* Another technique useful for Interceptors is to extend the basic function behavior by applying RxJS operators to the response stream.
+
+### Pipes
+
+* Transformation: where we transform input data to the desired output
+* Validation: where we evaluate input data and if valid, simply pass it through unchanged. If the data is NOT valid - we want to throw an exception.
+
+`nest g pipe common/pipes/parse-int`
+
+## Middleware 
+(**This are executed before the route handler and any other building block**)
+
+`nest g middleware common/middleware/logging`
+
+Middleware functions have access to the request and response objects, and are not specifically tied to any method, but rather to a specified route PATH.
+
+Middleware functions can perform the following tasks:
+
+* executing code
+* making changes to the request and the response objects.
+* ending the request-response cycle.
+* Or even calling the next middleware function in the call stack.
+
+When working with middleware, if the current middleware function does not END the request-response cycle, it must call the next() method, which passes control to the next middleware function. Otherwise, the request will be left hanging - and never complete.
+
+## Custom Decorator with createParamDecorator where we can get info from request.
+
+This example is a simple Protocol deocrator that return the protocol from the requests.
+
+```ts
+import {
+    createParamDecorator,
+    ExecutionContext,
+} from '@nestjs/common';
+
+export const Protocol = createParamDecorator(
+    (data: unknown, ctx: ExecutionContext) => {
+      const request = ctx.switchToHttp().getRequest();
+      return request.protocol;
+    },
+);
+
+```
