@@ -20,6 +20,12 @@ A framework to work with node.js that let us focusing on feature development and
         PartialType extends from create-coffee but all its properties as optionals
         And also it inherits all its validation rules.
 
+## Mongo DB
+
+`npm i mongoose @nestjs/mongoose`
+`npm i -D types/mongoose`
+
+`podman run -d -p 27017:27017 mongo`
 
 ## SQL - Postgres
 ### NPM Install
