@@ -20,6 +20,10 @@ export class UsersService {
     return user;
   }
 
+ async findbyEmail(email:string) {
+    return this.userRepository.findOne({ where: { email } });
+ }
+
   async create(createUserDto: CreateUserDto) {
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
