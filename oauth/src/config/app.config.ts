@@ -6,5 +6,9 @@ export default () => ({
       password: process.env.DATABASE_PASS || 'pass123',
       username: process.env.DATABASE_USER || 'postgres',
       database_name: process.env.DATABASE_NAME || 'postgres'
+    },
+    jwt: {
+      secret: process.env.JWT_SECRET || 'secret_key',
+      expire_time: process.env.JWT_EXPIRE_TIME || '60s'
     }
 });

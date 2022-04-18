@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/filter-name-exception.filter';
 
@@ -14,6 +15,12 @@ async function bootstrap() {
       enableImplicitConversion: true,
     },
   }));
+
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true
+  });
+  app.use(cookieParser());
 
   app.useGlobalFilters(new HttpExceptionFilter);
 

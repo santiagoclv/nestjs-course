@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -7,7 +8,10 @@ import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly usersService: UsersService) {}
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService
+    ) {}
 
     async register(registerUserDto: RegisterUserDto){
         const { password, password_confirm } = registerUserDto;
@@ -36,6 +40,10 @@ export class AuthService {
             throw new UnauthorizedException("wrong email or password");
         }
 
-        return user;
+        const payload = { email: user.email, sub: user.id };
+
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
     }
 }
