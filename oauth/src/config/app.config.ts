@@ -9,6 +9,8 @@ export default () => ({
     },
     jwt: {
       secret: process.env.JWT_SECRET || 'secret_key',
-      expire_time: process.env.JWT_EXPIRE_TIME || '60s'
+      expire_time: process.env.JWT_EXPIRE_TIME || '60s',
+      secret_refresh: process.env.JWT_SECRET_REFRESH || 'secret_key_refresh',
+      expire_time_refresh: process.env.JWT_EXPIRE_TIME_REFRESH || '7200s'
     }
 });

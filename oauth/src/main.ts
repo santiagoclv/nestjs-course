@@ -12,7 +12,7 @@ async function bootstrap() {
     whitelist: true,
     transform: true, // this will cast everything to the type of data that the controller's method argument define.
     transformOptions: {
-      enableImplicitConversion: true,
+      enableImplicitConversion: true
     },
   }));
 

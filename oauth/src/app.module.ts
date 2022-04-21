@@ -26,7 +26,7 @@ import validationConfig from './config/validation.config';
         database: configService.get('database.database_name'),
         autoLoadEntities: true,
         synchronize: true,
-      })
+      }),
     }),
     UsersModule,
     AuthModule
