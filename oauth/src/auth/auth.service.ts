@@ -1,17 +1,61 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../jwt/jwt.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { Repository } from 'typeorm';
+import { Reset } from './entities/reset.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly usersService: UsersService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        @InjectRepository(Reset)
+        private readonly resetRepository: Repository<Reset>
     ) {}
+
+    async storeTokenForgotPassword(token: string, email: string){
+        const user = await this.usersService.findbyEmail(email);
+        if(!user){
+            throw new NotFoundException('user not found');
+        }
+        const reset = this.resetRepository.create({
+            token,
+            email
+        });
+        return this.resetRepository.save(reset);
+    }
+    
+    async resetPassword(resetPasswordDto: ResetPasswordDto){
+        const { token, email, password } = resetPasswordDto;
+        const tokenRest = await this.resetRepository.findOne({
+            token,
+            email
+        });
+        
+        if(!tokenRest){
+            throw new UnauthorizedException('invalid token');
+        }
+
+        const user = await this.usersService.findbyEmail(email);
+
+        if(!user){
+            throw new NotFoundException('user not found');
+        }
+
+        await this.usersService.update(user.id, {
+            password: await bcrypt.hash(password, 12)
+        });
+
+        await this.resetRepository.remove(tokenRest);
+
+        return true;
+    }
 
     async register(registerUserDto: RegisterUserDto){
         const { password, password_confirm } = registerUserDto;
@@ -25,6 +69,17 @@ export class AuthService {
 
         // ToDo: this doesn't seems to be right, what to return here?
         return this.usersService.create(createUser);
+    }
+
+    async refresh(refreshToken: string): Promise<string> {
+        const { email } = await this.jwtService.verifyRefreshToken(refreshToken);
+        const user = await this.usersService.findbyEmail(email);
+
+        if(!user){
+            throw new UnauthorizedException("wrong email or password");
+        }
+
+        return this.jwtService.generateToken(user);
     }
 
     async login(loginUserDto: LoginUserDto){

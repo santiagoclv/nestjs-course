@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
@@ -28,12 +28,18 @@ export class JwtService {
     }
 
     verifyToken(token: string): Promise<TokenPayloadDto> {
+        if(!token){
+            throw new UnauthorizedException();
+        }
         return this.nestJwtService.verifyAsync(token, {
             secret: this.configService.get('jwt.secret')
         });
     }
 
     verifyRefreshToken(token: string): Promise<TokenPayloadDto> {
+        if(!token){
+            throw new UnauthorizedException();
+        }
         return this.nestJwtService.verifyAsync(token, {
             secret: this.configService.get('jwt.secret_refresh')
         });

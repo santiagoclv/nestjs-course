@@ -1,4 +1,5 @@
 import { IsString, IsEmail } from "class-validator";
+import { IsSamePropertyValue } from "../decorators/same-value-password.decorator";
 
 export class RegisterUserDto {
   @IsString()
@@ -10,6 +11,7 @@ export class RegisterUserDto {
   @IsEmail()
   email: string;
 
+  @IsSamePropertyValue('password_confirm', { message: "password and confirm_password must be the same" })
   @IsString()
   password: string;
 
