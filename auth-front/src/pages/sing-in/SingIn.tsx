@@ -25,6 +25,7 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     const { ok } = await fetch('http://localhost:3000/auth/login' ,{
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
