@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { FormEvent, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,14 +18,33 @@ import Copyright from '../../components/copyrights/Copyrights';
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [redirect, setRedirect] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    const { ok } = await fetch('http://localhost:3000/auth/register' ,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        first_name: data.get('first_name'),
+        email: data.get('email'),
+        last_name: data.get('last_name'),
+        password: data.get('password'),
+        password_confirm: data.get('password_confirm'),
+      })
     });
+
+    if(ok){
+      setRedirect(true);
+    }
   };
+
+  if(redirect){
+    return <Navigate to="/singin" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,10 +69,10 @@ export default function SignUp() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="first_name"
                   required
                   fullWidth
-                  id="firstName"
+                  id="first_name"
                   label="First Name"
                   autoFocus
                 />
@@ -62,9 +81,9 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
+                  id="last_name"
                   label="Last Name"
-                  name="lastName"
+                  name="last_name"
                   autoComplete="family-name"
                 />
               </Grid>
@@ -86,6 +105,17 @@ export default function SignUp() {
                   label="Password"
                   type="password"
                   id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password_confirm"
+                  label="Confirm Password"
+                  type="password"
+                  id="password_confirm"
                   autoComplete="new-password"
                 />
               </Grid>

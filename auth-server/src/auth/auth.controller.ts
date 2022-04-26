@@ -1,10 +1,12 @@
-import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, Patch, Post, Req, Res } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { RegisterUserResponseDto } from './dto/register-user-response.dto';
+import { instanceToInstance } from 'class-transformer';
 const crypto = import('crypto');
 
 @Controller('auth')
@@ -12,8 +14,8 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('register')
-    register(@Body() registerUserDto: RegisterUserDto) {
-        return this.authService.register(registerUserDto);
+    register(@Body() registerUserDto: RegisterUserDto): Promise<RegisterUserResponseDto>  {
+        return instanceToInstance(this.authService.register(registerUserDto));
     }
 
     @Post('login')

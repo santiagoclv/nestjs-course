@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { FormEvent, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,14 +19,29 @@ import Copyright from '../../components/copyrights/Copyrights';
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [ redirect, setRedirect ] = useState(false);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    const { ok } = await fetch('http://localhost:3000/auth/login' ,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        password: data.get('password'),
+        email: data.get('email')
+      })
     });
+
+    if(ok){
+      setRedirect(true);
+    }
   };
+
+  if(redirect){
+    return <Navigate to="/" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
