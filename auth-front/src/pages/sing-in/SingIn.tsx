@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import axios from 'axios';
 import { Link, Navigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -23,21 +24,12 @@ export default function SignIn() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const { ok } = await fetch('http://localhost:3000/auth/login' ,{
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        password: data.get('password'),
-        email: data.get('email')
-      })
-    });
+    await axios.post('http://localhost:3000/auth/login' , {
+      password: data.get('password'),
+      email: data.get('email')
+    }, { withCredentials: true });
 
-    if(ok){
-      setRedirect(true);
-    }
+    setRedirect(true);
   };
 
   if(redirect){

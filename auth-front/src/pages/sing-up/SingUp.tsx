@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import axios from 'axios';
 import { Link, Navigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -23,26 +24,18 @@ export default function SignUp() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const { ok } = await fetch('http://localhost:3000/auth/register' ,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        first_name: data.get('first_name'),
-        email: data.get('email'),
-        last_name: data.get('last_name'),
-        password: data.get('password'),
-        password_confirm: data.get('password_confirm'),
-      })
+    await axios.post('http://localhost:3000/auth/register', {
+      first_name: data.get('first_name'),
+      email: data.get('email'),
+      last_name: data.get('last_name'),
+      password: data.get('password'),
+      password_confirm: data.get('password_confirm')
     });
 
-    if(ok){
-      setRedirect(true);
-    }
+    setRedirect(true);
   };
 
-  if(redirect){
+  if (redirect) {
     return <Navigate to="/singin" />;
   }
 

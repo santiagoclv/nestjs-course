@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
     Container,
     Typography
@@ -10,17 +11,10 @@ export default function Home() {
     useEffect(() => {
         ( async () => {
             try {
-                const response = await fetch('http://localhost:3000/users/@me' ,{
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                if (response.ok) {
-                    const user = await response.json();
-                    console.log(user)
-                    setMessage(`Hi ${user.first_name} ${user.last_name}`);
-                }
+                const { data: user } = await axios.get('http://localhost:3000/users/@me' , { withCredentials: true });
+                setMessage(`Hi ${user.first_name} ${user.last_name}`);
             } catch (error) {
-                setMessage(`Something whent wrong!`);
+                setMessage('You are not authenticaed');
             }
         })();
     }, []);
