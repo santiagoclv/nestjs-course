@@ -4,11 +4,11 @@ import { closeInMongodConnection, rootMongooseTestModule } from './mongo-inmemor
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { CoffeeModule } from './coffee.module';
-import { createUserStub } from './stubs/coffee.stub';
+import { createCoffeeStub } from './stubs/coffee.stub';
 import { CoffeeRepository } from './coffees.repository';
 
 describe('Coffee Module', () => {
-  const coffeeMocca = createUserStub();
+  const coffeeMocca = createCoffeeStub();
   let app: INestApplication;
   let coffeesRepository: CoffeeRepository;
 
