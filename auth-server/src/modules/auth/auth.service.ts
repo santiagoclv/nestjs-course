@@ -57,7 +57,7 @@ export class AuthService {
         return true;
     }
 
-    async register(registerUserDto: RegisterUserDto){
+    async register(registerUserDto: RegisterUserDto) : Promise<boolean> {
         const { password, password_confirm } = registerUserDto;
         if(password !== password_confirm){
             throw new BadRequestException('passwords do not match');
@@ -67,8 +67,8 @@ export class AuthService {
             password: await bcrypt.hash(password, 12)
         };
 
-        // ToDo: this doesn't seems to be right, what to return here?
-        return this.usersService.create(createUser);
+        const { id } = await this.usersService.create(createUser);
+        return !!id;
     }
 
     async refresh(refreshToken: string): Promise<string> {

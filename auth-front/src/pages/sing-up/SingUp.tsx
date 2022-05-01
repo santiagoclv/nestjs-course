@@ -24,7 +24,7 @@ export default function SignUp() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await axios.post('http://localhost:3000/auth/register', {
+    await axios.post('/auth/register', {
       first_name: data.get('first_name'),
       email: data.get('email'),
       last_name: data.get('last_name'),

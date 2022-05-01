@@ -53,7 +53,6 @@ export class CoffeesController {
         if(!coffee) {
             throw new NotFoundException(`Coffe ${id} does not exit`);
         }
-        console.log(coffee)
         return this.coffeesService.recommendCoffee(coffee);
     }
 

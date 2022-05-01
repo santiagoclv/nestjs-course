@@ -3,24 +3,24 @@ import * as jwt from 'jsonwebtoken';
 import { closeInMongodConnection, rootMongooseTestModule } from './mongo-inmemory';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { UsersModule } from './users.module';
-import { createUserStub } from './stubs/user.stub';
-import { UsersRepository } from './users.repository';
+import { CoffeeModule } from './coffee.module';
+import { createUserStub } from './stubs/coffee.stub';
+import { CoffeeRepository } from './coffees.repository';
 
-describe('Users Module', () => {
-  const userWill = createUserStub();
+describe('Coffee Module', () => {
+  const coffeeMocca = createUserStub();
   let app: INestApplication;
-  let usersRepository: UsersRepository;
+  let coffeesRepository: CoffeeRepository;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         rootMongooseTestModule(),
-        UsersModule
+        CoffeeModule
       ]
     }).compile();
 
-    usersRepository = moduleFixture.get<UsersRepository>(UsersRepository);
+    coffeesRepository = moduleFixture.get<CoffeeRepository>(CoffeeRepository);
     app = moduleFixture.createNestApplication();
     await app.init();
   });
@@ -28,49 +28,45 @@ describe('Users Module', () => {
   describe('/create (POST)', () => {
     it('successfully', async () => {
       const response = await request(app.getHttpServer())
-        .post('/users')
-        .send(userWill)
+        .post('/coffees')
+        .send(coffeeMocca)
         .set('Accept', 'application/json');
   
       expect(response.status).toEqual(201);
-      expect(response.body.email).toEqual(userWill.userInfo.email);
+      expect(response.body.email).toEqual(coffeeMocca.coffeeInfo.email);
     });
   });
 
-  describe('/users/@me (GET)', () => {
+  describe('/coffees/:id (GET)', () => {
     it('successfully', async () => {
-      const user = await usersRepository.findByEmail(userWill.userInfo.email);
-      const jwtToken = jwt.sign({ userId: user.id }, 'secret');
+      const coffee = await coffeesRepository.findByEmail(coffeeMocca.coffeeInfo.email);
+      const jwtToken = jwt.sign({ coffeeId: coffee.id }, 'secret');
       let headers = {
         'Authorization': 'Bearer ' + jwtToken
       };
       const response = await request(app.getHttpServer())
-        .get('/users/@me')
+        .get('/coffees/:id')
         .set(headers);
   
       expect(response.status).toEqual(200);
-      expect(response.body.id).toEqual(user.id);
-      expect(response.body.email).toEqual(user.email);
-      expect(response.body.firstName).toEqual(user.firstName);
+      expect(response.body.id).toEqual(coffee.id);
     });
 
     it('bad request', async () => {
-      const jwtToken = jwt.sign({ userId: 'a12345' }, 'secret');
+      const jwtToken = jwt.sign({ coffeeId: 'a12345' }, 'secret');
       let headers = {
         'Authorization': 'Bearer ' + jwtToken
       };
       const response = await request(app.getHttpServer())
-        .get('/users/@me')
+        .get('/coffees/:id')
         .set(headers);
-      console.log(response.body)
       expect(response.status).toEqual(400);
-      expect(response.body.email).not.toEqual(userWill.userInfo.email);
     });
 
     it('unauthorized', async () => {
       let headers = {};
       const response = await request(app.getHttpServer())
-        .get('/users/@me')
+        .get('/coffees/:id')
         .set(headers);
 
       expect(response.status).toEqual(401);
