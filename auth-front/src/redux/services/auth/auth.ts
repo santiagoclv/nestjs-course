@@ -3,6 +3,8 @@ import { axiosBaseQuery } from "../../axios/axios";
 import { User } from "../../dto/user";
 import { LoginQuery } from "../../dto/login-query";
 import { RegisterQuery } from "../../dto/register-query";
+import { ForgotPasswordQuery } from "../../dto/forgot-password-query";
+import { ResetPasswordQuery } from "../../dto/reset-password-query";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -37,6 +39,20 @@ export const authApi = createApi({
         method: "GET"
       }),
       invalidatesTags: ["User"],
+    }),
+    forgotPassword: builder.mutation<string, ForgotPasswordQuery>({
+      query: (forgotPasswordData) => ({
+        url: "auth/forgot",
+        method: "POST",
+        data: forgotPasswordData
+      })
+    }),
+    resetPassword: builder.mutation<void, ResetPasswordQuery>({
+      query: (resetPasswordData) => ({
+        url: "auth/reset",
+        method: "PATCH",
+        data: resetPasswordData
+      })
     })
   }),
 });
@@ -46,4 +62,6 @@ export const {
   useRegisterMutation,
   useLogoutMutation,
   useGetMeQuery,
+  useForgotPasswordMutation,
+  useResetPasswordMutation
 } = authApi;

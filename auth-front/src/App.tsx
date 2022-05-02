@@ -4,6 +4,8 @@ import Home from "./pages/home/Home";
 import NotFound from "./pages/not-found/NotFound";
 import SignIn from "./pages/sing-in/SingIn";
 import SignUp from "./pages/sing-up/SingUp";
+import ForgotPassword from "./pages/forgot-password/ForgotPassword";
+import ResetPassword from "./pages/reset-password/ResetPassword";
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path="singup" element={<SignUp />} />
           <Route path="singin" element={<SignIn />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password/:token" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

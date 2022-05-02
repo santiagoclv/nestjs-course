@@ -39,8 +39,8 @@ export class AuthController {
     }
 
     @Post('forgot')
-    @HttpCode(302)
-    async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto, @Res({ passthrough: true }) response: Response) {
+    @HttpCode(200)
+    async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
         const { email } = forgotPasswordDto;
         const token = (await crypto).randomUUID();
         await this.authService.storeTokenForgotPassword(token, email);
@@ -50,7 +50,7 @@ export class AuthController {
         // The link in the email will looks like: 
         // `http://your-domain/auth/reset/${token}`
         // This here is for testing!
-        response.redirect(`http://localhost:3000/auth/reset/${token}`);
+        return token;
     }
 
     @Patch('reset')
