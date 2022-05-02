@@ -21,7 +21,7 @@ export default function Layout() {
     const [ logoutTrigger ]  = useLogoutMutation();
 
     const onClickLogout = async () => {
-        logoutTrigger();
+        await logoutTrigger().unwrap();
     }
 
     return (
@@ -30,14 +30,14 @@ export default function Layout() {
                 <Header>
                     <Link to="/"><Typography variant="h6">Auth App</Typography></Link>
                     {
-                        !user &&
+                        !user?.id &&
                         <>
                             <Link to="/singin"><Typography variant="h6">Sing in</Typography></Link>
                             <Link to="/singup"><Typography variant="h6">Sing up</Typography></Link>
                         </>
                     }
                     {
-                        user &&
+                        user?.id &&
                         <>
                             <Link to="/" onClick={onClickLogout}><Typography variant="h6">Logout</Typography></Link>
                         </>

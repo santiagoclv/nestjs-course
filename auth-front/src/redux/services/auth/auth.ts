@@ -1,63 +1,49 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { axiosBaseQuery } from "../../axios/axios";
 import { User } from "../../dto/user";
 import { LoginQuery } from "../../dto/login-query";
 import { RegisterQuery } from "../../dto/register-query";
 
-const baseUrl =
-  process.env.REACT_APP_API_BASE_URL ?? "http://localhost:3000/";
-
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl }),
-  tagTypes: ['User'],
+  baseQuery: axiosBaseQuery(),
+  tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<void, LoginQuery>({
       query: (loginData) => ({
-        url: 'auth/login',
-        method: 'POST',
-        body: loginData,
-        credentials: 'include'
+        url: "auth/login",
+        method: "POST",
+        data: loginData
       }),
-      invalidatesTags: ['User']
+      invalidatesTags: ["User"],
     }),
     getMe: builder.query<User, void>({
       query: () => ({
         url: "users/@me",
-        credentials: "include",
+        method: "GET"
       }),
-      providesTags: ['User']
-    }),
-    refresh: builder.mutation<void, void>({
-      query: () => 'auth/refresh',
+      providesTags: ["User"],
     }),
     register: builder.mutation<boolean, RegisterQuery>({
       query: (registerData) => ({
-        url: 'auth/register',
-        method: 'POST',
-        body: registerData
-      })
+        url: "auth/register",
+        method: "POST",
+        data: registerData,
+      }),
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: 'auth/logout',
-        credentials: 'include'
+        url: "auth/logout",
+        method: "GET"
       }),
-      invalidatesTags: ['User']
-    }),
-    forgot: builder.query<void, string>({
-      query: () => 'auth/forgot',
-    }),
-    reset: builder.query<void, string>({
-      query: () => 'auth/reset',
-    }),
+      invalidatesTags: ["User"],
+    })
   }),
 });
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
 export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  useGetMeQuery
+  useGetMeQuery,
 } = authApi;
