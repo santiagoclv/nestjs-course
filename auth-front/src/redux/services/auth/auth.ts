@@ -5,18 +5,38 @@ import { LoginQuery } from "../../dto/login-query";
 import { RegisterQuery } from "../../dto/register-query";
 import { ForgotPasswordQuery } from "../../dto/forgot-password-query";
 import { ResetPasswordQuery } from "../../dto/reset-password-query";
+import { LoginResponse } from "../../dto/login-response";
+import { TfaQuery } from "../../dto/tfa-query";
+import { initialState, loginState } from "../../slices/sing-in";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: axiosBaseQuery(),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    login: builder.mutation<void, LoginQuery>({
+    login: builder.mutation<LoginResponse, LoginQuery>({
       query: (loginData) => ({
         url: "auth/login",
         method: "POST",
         data: loginData
       }),
+      onQueryStarted( arg, { queryFulfilled, dispatch }) {
+        queryFulfilled.then( ({data}) => {
+          dispatch(loginState(data))
+        });
+      }
+    }),
+    tfa: builder.mutation<boolean, TfaQuery>({
+      query: (loginData) => ({
+        url: "auth/tfa",
+        method: "POST",
+        data: loginData
+      }),
+      onQueryStarted( arg, { queryFulfilled, dispatch }) {
+        queryFulfilled.then(() => {
+          dispatch(loginState(initialState))
+        });
+      },
       invalidatesTags: ["User"],
     }),
     getMe: builder.query<User, void>({
@@ -63,5 +83,6 @@ export const {
   useLogoutMutation,
   useGetMeQuery,
   useForgotPasswordMutation,
-  useResetPasswordMutation
+  useResetPasswordMutation,
+  useTfaMutation
 } = authApi;

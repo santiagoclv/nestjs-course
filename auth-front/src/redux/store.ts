@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { authApi } from './services/auth/auth';
+import singin from './slices/sing-in';
 import './axios/interceptor';
 
 export const store = configureStore({
   reducer: {
+    singin,
     // Add the generated reducer as a specific top-level slice
     [authApi.reducerPath]: authApi.reducer,
   },

@@ -11,10 +11,15 @@ export class User {
   last_name: string;
 
   @Column({
-      unique: true
+    unique: true,
   })
   email: string;
 
   @Column()
   password: string;
+
+  @Column({
+    default: '',
+  })
+  tfa_secret: string;
 }

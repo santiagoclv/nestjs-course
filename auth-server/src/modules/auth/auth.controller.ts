@@ -5,6 +5,10 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { TwoFactorAuthDto } from './dto/two-factor-auth.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+
+
 const crypto = import('crypto');
 
 @Controller('auth')
@@ -18,8 +22,17 @@ export class AuthController {
 
     @Post('login')
     @HttpCode(200)
-    async login(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) response: Response) {
-        const { access_token, refresh_token } = await this.authService.login(loginUserDto);
+    login(@Body() loginUserDto: LoginUserDto): Promise<LoginResponseDto> {
+        return this.authService.login(loginUserDto);
+    }
+
+    @Post('tfa')
+    @HttpCode(200)
+    async twoFactoraAuth(
+        @Body() twoFactorAuthDto: TwoFactorAuthDto,
+        @Res({ passthrough: true }) response: Response
+    ) {
+        const { access_token, refresh_token } = await this.authService.twoFactorAuth(twoFactorAuthDto);
         response.cookie("access_token", access_token, { httpOnly: true });
         response.cookie("refresh_token", refresh_token, { httpOnly: true });
     }
