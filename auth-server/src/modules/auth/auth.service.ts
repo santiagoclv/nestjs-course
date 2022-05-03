@@ -111,7 +111,7 @@ export class AuthService {
             }
         }
 
-        const secret = "FARQMXY5LRESG7YI" // authenticator.generateSecret();
+        const secret = authenticator.generateSecret();
         const otpauth = authenticator.keyuri(user.email, 'Auth App', secret);
 
         return {
