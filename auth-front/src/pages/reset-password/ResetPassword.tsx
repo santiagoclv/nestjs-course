@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from '../../components/copyrights/Copyrights';
-import { useResetPasswordMutation } from '../../redux/services/auth/auth';
+// import { useResetPasswordMutation } from '../../redux/services/auth/auth';
 
 
 // ToDo investigate if this is ok
@@ -19,22 +19,22 @@ const theme = createTheme();
 
 export default function ResetPassword() {
   const { token } = useParams();
-  const [ resetRequest, { isSuccess } ] = useResetPasswordMutation();
+  // const [ resetRequest, { isSuccess } ] = useResetPasswordMutation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await resetRequest({
-      token: token as string,
-      email: data.get('email') as string, 
-      password: data.get('password') as string,
-      confirm_password: data.get('confirm_password') as string
-    }).unwrap();
+    // await resetRequest({
+    //   token: token as string,
+    //   email: data.get('email') as string, 
+    //   password: data.get('password') as string,
+    //   confirm_password: data.get('confirm_password') as string
+    // }).unwrap();
   };
 
-  if(isSuccess){
-    return <Navigate to="/" />;
-  }
+  // if(isSuccess){
+  //   return <Navigate to="/" />;
+  // }
 
   return (
     <ThemeProvider theme={theme}>

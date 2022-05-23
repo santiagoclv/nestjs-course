@@ -9,18 +9,18 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useLoginMutation } from "../../../redux/services/auth/auth";
+// import { useLoginMutation } from "../../../redux/services/auth/auth";
 
 export default function EmailPassword() {
-  const [login] = useLoginMutation();
+  // const [login] = useLoginMutation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    login({
-      password: data.get("password") as string,
-      email: data.get("email") as string,
-    });
+    // login({
+    //   password: data.get("password") as string,
+    //   email: data.get("email") as string,
+    // });
   };
 
   return (

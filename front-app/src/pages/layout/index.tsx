@@ -32,8 +32,8 @@ export default function Layout() {
                     {
                         !user?.id &&
                         <>
-                            <Link to="/singin"><Typography variant="h6">Sing in</Typography></Link>
-                            <Link to="/singup"><Typography variant="h6">Sing up</Typography></Link>
+                            <a href='http://localhost:3000/auth/singin'><Typography variant="h6">Sing in</Typography></a>
+                            <a href='http://localhost:3000/auth/singup'><Typography variant="h6">Sing up</Typography></a>
                         </>
                     }
                     {

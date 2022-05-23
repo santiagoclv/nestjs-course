@@ -7,28 +7,28 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useTfaMutation } from "../../../redux/services/auth/auth";
+// import { useTfaMutation } from "../../../redux/services/auth/auth";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+// import { RootState } from "../../../redux/store";
 
 export default function TFAChallenge() {
-  const [tfa, { isSuccess }] = useTfaMutation();
-  const { challenge, id, otpauth, secret } = useSelector((state: RootState) => state.singin);
-
+  // const [tfa, { isSuccess }] = useTfaMutation();
+  // const { challenge, id, otpauth, secret } = useSelector((state: RootState) => state.singin);
+const otpauth = false;
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await tfa({
-      challenge,
-      id,
-      token: data.get("token") as string,
-      secret
-    }).unwrap();
+    // await tfa({
+    //   challenge,
+    //   id,
+    //   token: data.get("token") as string,
+    //   secret
+    // }).unwrap();
   };
 
-  if (isSuccess) {
-    return <Navigate to="/" />;
-  }
+  // if (isSuccess) {
+  //   return <Navigate to="/" />;
+  // }
 
   return (
     <Box

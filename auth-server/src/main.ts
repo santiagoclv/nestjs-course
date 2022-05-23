@@ -8,8 +8,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({
-    forbidNonWhitelisted: true,
-    whitelist: true,
     transform: true, // this will cast everything to the type of data that the controller's method argument define.
     transformOptions: {
       enableImplicitConversion: true
@@ -17,8 +15,11 @@ async function bootstrap() {
   }));
 
   app.enableCors({
-    origin: ['http://localhost:3001'],
-    credentials: true
+    origin: [
+      'http://localhost:3002',
+      'http://localhost:3001'
+    ],
+    methods: ['GET', 'POST']
   });
   app.use(cookieParser());
 

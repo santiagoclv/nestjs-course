@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import React, { FormEvent } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,32 +13,33 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from '../../components/copyrights/Copyrights';
-import { useRegisterMutation } from '../../redux/services/auth/auth';
+// import { useRegisterMutation } from '../../redux/services/auth/auth';
+import axios from 'axios';
 
 // ToDo investigate if this is ok
 const theme = createTheme();
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
 export default function SignUp() {
-  const [ registerUser ] = useRegisterMutation();
-  const [redirect, setRedirect] = useState(false);
+  const query = useQuery();
+  // const [ registerUser ] = useRegisterMutation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await registerUser({
+    await axios.post(`http://localhost:3000/auth/register?referer=${query.get("referer") as string}`, {
       first_name: data.get('first_name') as string,
       email: data.get('email') as string,
       last_name: data.get('last_name') as string,
       password: data.get('password') as string,
-      password_confirm: data.get('password_confirm') as string
-    }).unwrap();
-
-    setRedirect(true);
+      password_confirm: data.get('password_confirm') as string,
+    });
   };
-
-  if (redirect) {
-    return <Navigate to="/singin" />;
-  }
 
   return (
     <ThemeProvider theme={theme}>

@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from '../../components/copyrights/Copyrights';
-import { useForgotPasswordMutation } from '../../redux/services/auth/auth';
 
 
 // ToDo investigate if this is ok
@@ -19,21 +18,20 @@ const theme = createTheme();
 
 export default function ForgotPassword() {
   const [ tokenRedirect, setTokenRedirect ] = useState<string>();
-  const [ forgotPasswordRequest, { isSuccess } ] = useForgotPasswordMutation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const token = await forgotPasswordRequest({
-      email: data.get('email') as string
-    }).unwrap();
+    // const token = await forgotPasswordRequest({
+    //   email: data.get('email') as string
+    // }).unwrap();
 
-    setTokenRedirect(token)
+    // setTokenRedirect(token)
   };
 
-  if(isSuccess && tokenRedirect){
-    return <Navigate to={`/reset-password/${tokenRedirect}`} />;
-  }
+  // if(isSuccess && tokenRedirect){
+  //   return <Navigate to={`/reset-password/${tokenRedirect}`} />;
+  // }
 
   return (
     <ThemeProvider theme={theme}>

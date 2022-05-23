@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Patch, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Param, Patch, Post, Query, Req, Res } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -8,16 +8,40 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { TwoFactorAuthDto } from './dto/two-factor-auth.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 
-
 const crypto = import('crypto');
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
+    @Get('singup')
+    @HttpCode(302)
+    registerRedirect(
+        @Headers('referer') referer: string,
+        @Res({ passthrough: true }) response: Response
+    ){
+        return response.redirect(302, `http://localhost:3001/singup?referer=${referer}`);
+    }
+
+    @Get('singin')
+    @HttpCode(302)
+    loginRedirect(
+        @Headers('referer') referer: string,
+        @Res({ passthrough: true }) response: Response
+    ){
+        return response.redirect(302, `http://localhost:3001/singin?referer=${referer}`); 
+    }
+
     @Post('register')
-    register(@Body() registerUserDto: RegisterUserDto): Promise<boolean>  {
-        return this.authService.register(registerUserDto);
+    @HttpCode(302)
+    async register(
+        @Query('referer') referer: string,
+        @Res({ passthrough: true }) response: Response,
+        @Body() registerUserDto: RegisterUserDto
+    ) {
+        await this.authService.register(registerUserDto);
+        console.log(referer)
+        return response.redirect(302, referer);
     }
 
     @Post('login')
