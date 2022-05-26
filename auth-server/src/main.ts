@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/filter-name-exception.filter';
+import { WrapResponseInterceptor } from './common/interceptor/wrap-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,12 +15,17 @@ async function bootstrap() {
     },
   }));
 
+  app.useGlobalInterceptors(
+    new WrapResponseInterceptor()
+  )
+
   app.enableCors({
     origin: [
       'http://localhost:3002',
-      'http://localhost:3001'
+      'http://localhost:3001',
+      'https://app.gala.games'
     ],
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST', 'OPTIONS']
   });
   app.use(cookieParser());
 

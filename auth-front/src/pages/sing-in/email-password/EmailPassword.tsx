@@ -1,5 +1,5 @@
-import { FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -9,18 +9,28 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-// import { useLoginMutation } from "../../../redux/services/auth/auth";
+import useQuery from "../../../hooks/useQuery";
 
 export default function EmailPassword() {
-  // const [login] = useLoginMutation();
+  const referer = useQuery().get("referer") as string;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // login({
-    //   password: data.get("password") as string,
-    //   email: data.get("email") as string,
-    // });
+    await fetch(`http://localhost:3000/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password: data.get("password") as string,
+        email: data.get("email") as string,
+      }),
+    }).then(({ ok }) => {
+      if(ok) {
+        window.location.href = referer;
+      }
+    });
   };
 
   return (

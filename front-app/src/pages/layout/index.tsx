@@ -4,8 +4,6 @@ import {
 } from '@mui/material';
 import { Outlet, Link } from "react-router-dom";
 import styled from '@emotion/styled';
-import { useGetMeQuery } from '../../redux/services/auth/auth';
-import { useLogoutMutation } from '../../redux/services/auth/auth';
 
 const Header = styled.header`
   padding: 32px;
@@ -17,11 +15,9 @@ const Header = styled.header`
 `;
 
 export default function Layout() {
-    const { data: user } = useGetMeQuery();
-    const [ logoutTrigger ]  = useLogoutMutation();
+    const user = { id: false };
 
     const onClickLogout = async () => {
-        await logoutTrigger().unwrap();
     }
 
     return (
@@ -30,14 +26,14 @@ export default function Layout() {
                 <Header>
                     <Link to="/"><Typography variant="h6">Auth App</Typography></Link>
                     {
-                        !user?.id &&
+                        !user.id &&
                         <>
-                            <a href='http://localhost:3000/auth/singin'><Typography variant="h6">Sing in</Typography></a>
-                            <a href='http://localhost:3000/auth/singup'><Typography variant="h6">Sing up</Typography></a>
+                            <Link to="/singin" ><Typography variant="h6">Sing in</Typography></Link>
+                            <Link to="/singup" ><Typography variant="h6">Sing up</Typography></Link>
                         </>
                     }
                     {
-                        user?.id &&
+                        user.id &&
                         <>
                             <Link to="/" onClick={onClickLogout}><Typography variant="h6">Logout</Typography></Link>
                         </>

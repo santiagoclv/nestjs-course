@@ -1,5 +1,5 @@
-import React, { FormEvent } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,31 +13,33 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from '../../components/copyrights/Copyrights';
-// import { useRegisterMutation } from '../../redux/services/auth/auth';
-import axios from 'axios';
+import useQuery from '../../hooks/useQuery';
 
 // ToDo investigate if this is ok
 const theme = createTheme();
 
-function useQuery() {
-  const { search } = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
-
 export default function SignUp() {
-  const query = useQuery();
-  // const [ registerUser ] = useRegisterMutation();
+  const referer = useQuery().get("referer") as string;
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await axios.post(`http://localhost:3000/auth/register?referer=${query.get("referer") as string}`, {
-      first_name: data.get('first_name') as string,
-      email: data.get('email') as string,
-      last_name: data.get('last_name') as string,
-      password: data.get('password') as string,
-      password_confirm: data.get('password_confirm') as string,
+    fetch(`http://localhost:3000/auth/register?referer=${referer}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        first_name: data.get('first_name') as string,
+        email: data.get('email') as string,
+        last_name: data.get('last_name') as string,
+        password: data.get('password') as string,
+        password_confirm: data.get('password_confirm') as string,
+      })
+    }).then(({ ok }) => {
+      if(ok) {
+        window.location.href = referer;
+      }
     });
   };
 

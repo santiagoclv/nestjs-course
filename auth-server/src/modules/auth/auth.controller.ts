@@ -36,12 +36,13 @@ export class AuthController {
     @HttpCode(302)
     async register(
         @Query('referer') referer: string,
+        @Body() registerUserDto: RegisterUserDto,
         @Res({ passthrough: true }) response: Response,
-        @Body() registerUserDto: RegisterUserDto
     ) {
         await this.authService.register(registerUserDto);
-        console.log(referer)
-        return response.redirect(302, referer);
+        response.type('html');
+        response.contentType('html');
+        return response.redirect(302, referer); 
     }
 
     @Post('login')

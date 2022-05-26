@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
@@ -28,6 +30,11 @@ import validationConfig from './config/validation.config';
         synchronize: true,
       }),
     }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '../../auth-front', 'build'),
+    //   exclude: ['/auth/*', '/users/*'],
+    //   // serveRoot: '/front'
+    // }),
     UsersModule,
     AuthModule
   ]
