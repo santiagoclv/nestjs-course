@@ -23,6 +23,17 @@ export class AuthController {
         return response.redirect(302, `http://localhost:3001/singup?referer=${referer}`);
     }
 
+    @Post('register')
+    @HttpCode(303)
+    async register(
+        @Query('referer') referer: string,
+        @Body() registerUserDto: RegisterUserDto,
+        @Res({ passthrough: true }) response: Response,
+    ) {
+        await this.authService.register(registerUserDto);
+        return response.redirect(303, referer); 
+    }
+
     @Get('singin')
     @HttpCode(302)
     loginRedirect(
@@ -30,19 +41,6 @@ export class AuthController {
         @Res({ passthrough: true }) response: Response
     ){
         return response.redirect(302, `http://localhost:3001/singin?referer=${referer}`); 
-    }
-
-    @Post('register')
-    @HttpCode(302)
-    async register(
-        @Query('referer') referer: string,
-        @Body() registerUserDto: RegisterUserDto,
-        @Res({ passthrough: true }) response: Response,
-    ) {
-        await this.authService.register(registerUserDto);
-        response.type('html');
-        response.contentType('html');
-        return response.redirect(302, referer); 
     }
 
     @Post('login')

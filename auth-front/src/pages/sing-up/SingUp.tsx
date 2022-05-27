@@ -1,11 +1,8 @@
-import { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -20,28 +17,6 @@ const theme = createTheme();
 
 export default function SignUp() {
   const referer = useQuery().get("referer") as string;
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    fetch(`http://localhost:3000/auth/register?referer=${referer}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        first_name: data.get('first_name') as string,
-        email: data.get('email') as string,
-        last_name: data.get('last_name') as string,
-        password: data.get('password') as string,
-        password_confirm: data.get('password_confirm') as string,
-      })
-    }).then(({ ok }) => {
-      if(ok) {
-        window.location.href = referer;
-      }
-    });
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -61,7 +36,12 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            method='post'
+            action={`http://localhost:3000/auth/register?referer=${referer}`}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -114,12 +94,6 @@ export default function SignUp() {
                   type="password"
                   id="password_confirm"
                   autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
             </Grid>
