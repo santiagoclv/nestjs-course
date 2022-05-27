@@ -6,7 +6,7 @@ import {
 export default function Protected() {
     return (
         <Container>
-            <Typography variant="h2" component="h3">Protected</Typography>
+            <Typography variant="h2" component="h3">This is a protected page</Typography>
         </Container>
     )
 }

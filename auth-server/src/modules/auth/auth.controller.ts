@@ -52,12 +52,14 @@ export class AuthController {
     @Post('tfa')
     @HttpCode(200)
     async twoFactoraAuth(
+        @Query('referer') referer: string,
         @Body() twoFactorAuthDto: TwoFactorAuthDto,
         @Res({ passthrough: true }) response: Response
     ) {
         const { access_token, refresh_token } = await this.authService.twoFactorAuth(twoFactorAuthDto);
         response.cookie("access_token", access_token, { httpOnly: true });
         response.cookie("refresh_token", refresh_token, { httpOnly: true });
+        return response.redirect(303, referer);
     }
 
     @Get('refresh')

@@ -10,9 +10,10 @@ const externalRedirect = (externalLink: string) => () => {
   return null;
 }
 
+const SingUp = externalRedirect('http://localhost:3000/auth/singup');
+const SingIn = externalRedirect('http://localhost:3000/auth/singin');
+
 function App() {
-  const SingUp = externalRedirect('http://localhost:3000/auth/singup');
-  const SingIn = externalRedirect('http://localhost:3000/auth/singin');
   
   return (
     <div className="App">
@@ -22,7 +23,7 @@ function App() {
           <Route path='/singin' element={<SingIn />}/>
           <Route path='/singup' element={<SingUp />}/>
           <Route element={<RequireAuth />}>
-            <Route path="protected" element={<Protected />} />
+            <Route path="/protected" element={<Protected />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>

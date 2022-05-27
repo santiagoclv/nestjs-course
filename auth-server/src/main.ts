@@ -25,7 +25,8 @@ async function bootstrap() {
       'http://localhost:3001',
       'https://app.gala.games'
     ],
-    methods: ['GET', 'POST', 'OPTIONS']
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true
   });
   app.use(cookieParser());
 
